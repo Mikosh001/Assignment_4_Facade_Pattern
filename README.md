@@ -38,7 +38,7 @@ Customer: CUSTOMER
 Order ORD-1 confirmed for CUSTOMER, total: 10.00.
 ```
 
-The first failure releases stock. The second refunds the payment and releases stock. The final order succeeds because the book was restored. A later failure also cancels an already created shipment.
+The first failure releases stock. The second refunds the payment and releases stock. The final order succeeds because the book was restored. If confirmation fails after shipment creation, rollback also cancels that shipment.
 
 `report.pdf` contains the UML and five annotated Clean Code examples. Diagram source: `uml/facade.puml`.
 

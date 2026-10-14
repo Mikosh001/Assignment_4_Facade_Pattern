@@ -12,7 +12,7 @@ skinparam ranksep 35
 top to bottom direction
 
 class Main <<Client>> {
-  {static} +main(args: String[]): void
+  {static} +main(String[]): void
 }
 
 class OrderFacade <<Facade>> {
@@ -20,39 +20,39 @@ class OrderFacade <<Facade>> {
   -payment: PaymentProcessor
   -shipping: ShippingService
   -notifications: NotificationService
-  +placeOrder(cart, customerId): String
+  +placeOrder(Map<String, Integer>, String): String
 }
 
 class InventoryService <<Subsystem>> {
-  -stock: Map
-  -prices: Map
-  +totalPrice(cart): int
-  +reserve(cart): void
-  +release(cart): void
-  +available(productId): int
+  -stock: Map<String, Integer>
+  -prices: Map<String, Integer>
+  +totalPrice(Map<String, Integer>): int
+  +reserve(Map<String, Integer>): void
+  +release(Map<String, Integer>): void
+  +available(String): int
 }
 
 class PaymentProcessor <<Subsystem>> {
-  -balances: Map
-  +charge(customerId, amount): void
-  +refund(customerId, amount): void
-  +balanceOf(customerId): int
+  -balances: Map<String, Integer>
+  +charge(String, int): void
+  +refund(String, int): void
+  +balanceOf(String): int
 }
 
 class ShippingService <<Subsystem>> {
-  -addresses: Map
-  -shipments: Map
+  -addresses: Map<String, String>
+  -shipments: Map<String, String>
   -nextOrderNumber: int
-  +ship(cart, customerId): String
-  +cancel(orderId): void
+  +ship(Map<String, Integer>, String): String
+  +cancel(String): void
 }
 
 class NotificationService <<Subsystem>> {
-  -confirmations: Map
-  +sendConfirmation(orderId, customerId, amount): String
+  -confirmations: Map<String, String>
+  +sendConfirmation(String, String, int): String
 }
 
-Main ..> OrderFacade : placeOrder()
+Main ..> OrderFacade : creates, placeOrder()
 OrderFacade *-- InventoryService
 OrderFacade *-- PaymentProcessor
 OrderFacade *-- ShippingService

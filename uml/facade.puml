@@ -1,0 +1,63 @@
+@startuml
+!pragma layout smetana
+skinparam dpi 180
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classFontSize 16
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam monochrome true
+skinparam nodesep 28
+skinparam ranksep 35
+top to bottom direction
+
+class Main <<Client>> {
+  {static} +main(args: String[]): void
+}
+
+class OrderFacade <<Facade>> {
+  -inventory: InventoryService
+  -payment: PaymentProcessor
+  -shipping: ShippingService
+  -notifications: NotificationService
+  +placeOrder(cart, customerId): String
+}
+
+class InventoryService <<Subsystem>> {
+  -stock: Map
+  -prices: Map
+  +totalPrice(cart): int
+  +reserve(cart): void
+  +release(cart): void
+  +available(productId): int
+}
+
+class PaymentProcessor <<Subsystem>> {
+  -balances: Map
+  +charge(customerId, amount): void
+  +refund(customerId, amount): void
+  +balanceOf(customerId): int
+}
+
+class ShippingService <<Subsystem>> {
+  -addresses: Map
+  -shipments: Map
+  -nextOrderNumber: int
+  +ship(cart, customerId): String
+  +cancel(orderId): void
+}
+
+class NotificationService <<Subsystem>> {
+  -confirmations: Map
+  +sendConfirmation(orderId, customerId, amount): String
+}
+
+Main ..> OrderFacade : placeOrder()
+OrderFacade *-- InventoryService
+OrderFacade *-- PaymentProcessor
+OrderFacade *-- ShippingService
+OrderFacade *-- NotificationService
+InventoryService -[hidden]right- PaymentProcessor
+InventoryService -[hidden]down- ShippingService
+PaymentProcessor -[hidden]down- NotificationService
+@enduml
